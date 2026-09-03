@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
 import Link from "next/link";
 import React from "react";
 import { NavMenu } from "../navbar.types";
@@ -79,12 +78,16 @@ const TopNavbar = () => {
           </div>
           <Link
             href="/"
-            className={cn([
-              integralCF.className,
-              "text-2xl lg:text-[32px] mb-2 mr-3 lg:mr-10",
-            ])}
+            className="mt-2 mr-3 lg:mr-10 flex items-center"
           >
-            SHOP.CO
+            <Image
+              priority
+              src="/images/logo.png"
+              width={170}
+              height={70}
+              alt="Myzia Perfumes"
+              className="h-auto w-[100px] shrink-0 lg:w-[150px]"
+            />
           </Link>
         </div>
         <NavigationMenu className="hidden md:flex mr-2 lg:mr-7">

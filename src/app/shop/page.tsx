@@ -26,7 +26,23 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export default function ShopPage() {
+export default function ShopPage({
+  searchParams,
+}: {
+  searchParams: { category?: string };
+}) {
+  const products = [
+    ...relatedProductData,
+    ...newArrivalsData,
+    ...topSellingData,
+  ];
+  const filteredProducts = searchParams.category
+    ? products.filter((product) => product.category === searchParams.category)
+    : products;
+  const categoryTitle = searchParams.category
+    ? searchParams.category.replaceAll("-", " ")
+    : "All products";
+
   return (
     <main className="pb-20">
       <div className="max-w-frame mx-auto px-4 xl:px-0">
@@ -43,12 +59,14 @@ export default function ShopPage() {
           <div className="flex flex-col w-full space-y-5">
             <div className="flex flex-col lg:flex-row lg:justify-between">
               <div className="flex items-center justify-between">
-                <h1 className="font-bold text-2xl md:text-[32px]">Casual</h1>
+                <h1 className="font-bold text-2xl md:text-[32px] capitalize">
+                  {categoryTitle}
+                </h1>
                 <MobileFilters />
               </div>
               <div className="flex flex-col sm:items-center sm:flex-row">
                 <span className="text-sm md:text-base text-black/60 mr-3">
-                  Showing 1-10 of 100 Products
+                  Showing {filteredProducts.length} of {products.length} Products
                 </span>
                 <div className="flex items-center">
                   Sort by:{" "}
@@ -66,11 +84,7 @@ export default function ShopPage() {
               </div>
             </div>
             <div className="w-full grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
-              {[
-                ...relatedProductData.slice(1, 4),
-                ...newArrivalsData.slice(1, 4),
-                ...topSellingData.slice(1, 4),
-              ].map((product) => (
+              {filteredProducts.map((product) => (
                 <ProductCard key={product.id} data={product} />
               ))}
             </div>

@@ -28,13 +28,13 @@ const DressStyle = () => {
           className="flex flex-col sm:flex-row md:h-[289px] space-y-4 sm:space-y-0 sm:space-x-5 mb-4 sm:mb-5"
         >
           <DressStyleCard
-            title="Casual"
-            url="/shop#casual"
+            title="Bakhoor sticks"
+            url="/shop?category=bakhoor"
             className="md:max-w-[260px] lg:max-w-[360px] xl:max-w-[407px] h-[190px] bg-[url('/images/dress-style-1.png')]"
           />
           <DressStyleCard
-            title="Formal"
-            url="/shop#formal"
+            title="Pocket Spray"
+            url="/shop?category=pocket-spray"
             className="md:max-w-[684px] h-[190px] bg-[url('/images/dress-style-2.png')]"
           />
         </motion.div>
@@ -46,13 +46,13 @@ const DressStyle = () => {
           className="flex flex-col sm:flex-row md:h-[289px] space-y-5 sm:space-y-0 sm:space-x-5"
         >
           <DressStyleCard
-            title="Party"
-            url="/shop#party"
+            title="Pefumed Cream"
+            url="/shop?category=perfumed-cream"
             className="md:max-w-[684px] h-[190px] bg-[url('/images/dress-style-3.png')]"
           />
           <DressStyleCard
-            title="Gym"
-            url="/shop#gym"
+            title="oudh"
+            url="/shop?category=oudh-oil"
             className="md:max-w-[260px] lg:max-w-[360px] xl:max-w-[407px] h-[190px] bg-[url('/images/dress-style-4.png')]"
           />
         </motion.div>

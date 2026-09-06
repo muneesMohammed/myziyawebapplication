@@ -7,20 +7,20 @@ export type SpecItem = {
 
 const specsData: SpecItem[] = [
   {
-    label: " Material composition",
-    value: "100% Cotton",
+    label: "Fragrance type",
+    value: "Premium concentrated perfume",
   },
   {
-    label: "Care instructions",
-    value: "Machine wash warm, tumble dry",
+    label: "Scent profile",
+    value: "Warm, long-lasting and elegant",
   },
   {
-    label: "Fit type",
-    value: "Classic Fit",
+    label: "Recommended use",
+    value: "Apply to pulse points such as wrists and neck",
   },
   {
-    label: "Pattern",
-    value: "Solid",
+    label: "Storage",
+    value: "Keep tightly closed in a cool, dry place",
   },
 ];
 

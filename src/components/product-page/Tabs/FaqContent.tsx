@@ -13,34 +13,34 @@ type FaqItem = {
 
 const faqsData: FaqItem[] = [
   {
-    question: "What is the material of the t-shirt?",
+    question: "How should I apply the perfume?",
     answer:
-      "Provide details about the fabric type (e.g., cotton, polyester, blend), weight, and any specific features.",
+      "Apply a small amount to pulse points such as your wrists, neck and behind your ears. Avoid rubbing the fragrance after applying it.",
   },
   {
-    question: "What are the care instructions for the t-shirt?",
+    question: "How long does the fragrance last?",
     answer:
-      "Outline recommended washing, drying, and ironing methods to maintain quality and longevity.",
+      "Wear time depends on skin type, weather and application. Applying to moisturized skin can help the fragrance last longer.",
   },
   {
-    question: "What is the design or print on the t-shirt made of?",
+    question: "Where should I store my perfume?",
     answer:
-      "Explain the material used for the design (e.g., vinyl, screen print, embroidery) and its durability.",
+      "Store it upright, tightly closed and away from direct sunlight, heat and humidity to preserve the scent quality.",
   },
   {
-    question: "Is the t-shirt unisex or designed for specific genders?",
+    question: "Can I use this fragrance every day?",
     answer:
-      "Indicate whether the shirt is suitable for both men and women or targeted towards a particular gender.",
+      "Yes. Use a light application for daytime wear and add a little more for evenings or special occasions.",
   },
   {
-    question: "What are the shipping options and costs?",
+    question: "Is the fragrance suitable as a gift?",
     answer:
-      "Provide information about shipping methods, estimated delivery times, and associated fees.",
+      "Yes. The fragrance makes a thoughtful gift for anyone who enjoys refined, long-lasting scents.",
   },
   {
-    question: "What is the return policy for the t-shirt?",
+    question: "What are the shipping and return options?",
     answer:
-      "Outline the return window, conditions, and refund or exchange procedures.",
+      "Delivery times and charges are shown at checkout. Unopened products can be returned according to the store's return policy.",
   },
 ];
 

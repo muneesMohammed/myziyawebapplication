@@ -42,7 +42,7 @@ const footerLinksData: FooterLinks[] = [
       {
         id: 22,
         label: "delivery details",
-        url: "#",
+        url: "/address",
       },
       {
         id: 23,
@@ -63,12 +63,12 @@ const footerLinksData: FooterLinks[] = [
       {
         id: 31,
         label: "account",
-        url: "#",
+        url: "/signin",
       },
       {
         id: 32,
         label: "manage deliveries",
-        url: "#",
+        url: "/address",
       },
       {
         id: 33,

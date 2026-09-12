@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import BreadcrumbShop from "@/components/shop-page/BreadcrumbShop";
 
 import {
@@ -31,6 +34,8 @@ export default function ShopPage({
 }: {
   searchParams: { category?: string };
 }) {
+  const pageSize = 9;
+  const [currentPage, setCurrentPage] = useState(1);
   const products = [
     ...relatedProductData,
     ...newArrivalsData,
@@ -42,6 +47,12 @@ export default function ShopPage({
   const categoryTitle = searchParams.category
     ? searchParams.category.replaceAll("-", " ")
     : "All products";
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+  const activePage = Math.min(currentPage, totalPages);
+  const paginatedProducts = filteredProducts.slice(
+    (activePage - 1) * pageSize,
+    activePage * pageSize
+  );
 
   return (
     <main className="pb-20">
@@ -66,7 +77,7 @@ export default function ShopPage({
               </div>
               <div className="flex flex-col sm:items-center sm:flex-row">
                 <span className="text-sm md:text-base text-black/60 mr-3">
-                  Showing {filteredProducts.length} of {products.length} Products
+                  Showing {paginatedProducts.length} of {filteredProducts.length} Products
                 </span>
                 <div className="flex items-center">
                   Sort by:{" "}
@@ -84,69 +95,50 @@ export default function ShopPage({
               </div>
             </div>
             <div className="w-full grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
-              {filteredProducts.map((product) => (
+              {paginatedProducts.map((product) => (
                 <ProductCard key={product.id} data={product} />
               ))}
             </div>
             <hr className="border-t-black/10" />
             <Pagination className="justify-between">
-              <PaginationPrevious href="#" className="border border-black/10" />
+              <PaginationPrevious
+                href="#"
+                onClick={(event) => {
+                  event.preventDefault();
+                  setCurrentPage(Math.max(activePage - 1, 1));
+                }}
+                  aria-disabled={activePage === 1}
+                className="border border-black/10"
+              />
               <PaginationContent>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                    isActive
-                  >
-                    1
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                  >
-                    2
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem className="hidden lg:block">
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                  >
-                    3
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis className="text-black/50 font-medium text-sm" />
-                </PaginationItem>
-                <PaginationItem className="hidden lg:block">
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                  >
-                    8
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem className="hidden sm:block">
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                  >
-                    9
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    className="text-black/50 font-medium text-sm"
-                  >
-                    10
-                  </PaginationLink>
-                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                  (page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        href="#"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setCurrentPage(page);
+                        }}
+                        className="text-black/50 font-medium text-sm"
+                        isActive={page === activePage}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  )
+                )}
               </PaginationContent>
 
-              <PaginationNext href="#" className="border border-black/10" />
+              <PaginationNext
+                href="#"
+                onClick={(event) => {
+                  event.preventDefault();
+                  setCurrentPage(Math.min(activePage + 1, totalPages));
+                }}
+                aria-disabled={activePage === totalPages}
+                className="border border-black/10"
+              />
             </Pagination>
           </div>
         </div>

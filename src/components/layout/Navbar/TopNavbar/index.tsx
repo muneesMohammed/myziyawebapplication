@@ -134,7 +134,7 @@ const TopNavbar = () => {
             />
           </Link>
           <CartBtn />
-          <Link href="/#signin" className="p-1">
+          <Link href="/signin" className="p-1" aria-label="Sign in">
             <Image
               priority
               src="/icons/user.svg"

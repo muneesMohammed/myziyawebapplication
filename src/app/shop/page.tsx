@@ -36,6 +36,10 @@ export default function ShopPage({
 }) {
   const pageSize = 9;
   const [currentPage, setCurrentPage] = useState(1);
+  const [priceRange, setPriceRange] = useState<[number, number]>([50, 200]);
+  const [appliedPriceRange, setAppliedPriceRange] =
+    useState<[number, number]>([50, 200]);
+  const [sortBy, setSortBy] = useState("most-popular");
   const products = [
     ...relatedProductData,
     ...newArrivalsData,
@@ -44,12 +48,44 @@ export default function ShopPage({
   const filteredProducts = searchParams.category
     ? products.filter((product) => product.category === searchParams.category)
     : products;
+  const priceFilteredProducts = filteredProducts.filter(
+    (product) =>
+      product.price >= appliedPriceRange[0] &&
+      product.price <= appliedPriceRange[1]
+  );
+  const sortedProducts = [...priceFilteredProducts].sort((firstProduct, secondProduct) => {
+    if (sortBy === "low-price") {
+      const firstPrice =
+        firstProduct.price -
+        (firstProduct.price * firstProduct.discount.percentage) / 100 -
+        firstProduct.discount.amount;
+      const secondPrice =
+        secondProduct.price -
+        (secondProduct.price * secondProduct.discount.percentage) / 100 -
+        secondProduct.discount.amount;
+      return firstPrice - secondPrice;
+    }
+
+    if (sortBy === "high-price") {
+      const firstPrice =
+        firstProduct.price -
+        (firstProduct.price * firstProduct.discount.percentage) / 100 -
+        firstProduct.discount.amount;
+      const secondPrice =
+        secondProduct.price -
+        (secondProduct.price * secondProduct.discount.percentage) / 100 -
+        secondProduct.discount.amount;
+      return secondPrice - firstPrice;
+    }
+
+    return secondProduct.rating - firstProduct.rating;
+  });
   const categoryTitle = searchParams.category
     ? searchParams.category.replaceAll("-", " ")
     : "All products";
-  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / pageSize));
   const activePage = Math.min(currentPage, totalPages);
-  const paginatedProducts = filteredProducts.slice(
+  const paginatedProducts = sortedProducts.slice(
     (activePage - 1) * pageSize,
     activePage * pageSize
   );
@@ -65,7 +101,14 @@ export default function ShopPage({
               <span className="font-bold text-black text-xl">Filters</span>
               <FiSliders className="text-2xl text-black/40" />
             </div>
-            <Filters />
+            <Filters
+              priceRange={priceRange}
+              onPriceChange={setPriceRange}
+              onApply={() => {
+                setAppliedPriceRange(priceRange);
+                setCurrentPage(1);
+              }}
+            />
           </div>
           <div className="flex flex-col w-full space-y-5">
             <div className="flex flex-col lg:flex-row lg:justify-between">
@@ -73,15 +116,22 @@ export default function ShopPage({
                 <h1 className="font-bold text-2xl md:text-[32px] capitalize">
                   {categoryTitle}
                 </h1>
-                <MobileFilters />
+                <MobileFilters
+                  priceRange={priceRange}
+                  onPriceChange={setPriceRange}
+                  onApply={() => {
+                    setAppliedPriceRange(priceRange);
+                    setCurrentPage(1);
+                  }}
+                />
               </div>
               <div className="flex flex-col sm:items-center sm:flex-row">
                 <span className="text-sm md:text-base text-black/60 mr-3">
-                  Showing {paginatedProducts.length} of {filteredProducts.length} Products
+                  Showing {paginatedProducts.length} of {sortedProducts.length} Products
                 </span>
                 <div className="flex items-center">
                   Sort by:{" "}
-                  <Select defaultValue="most-popular">
+                  <Select value={sortBy} onValueChange={setSortBy}>
                     <SelectTrigger className="font-medium text-sm px-1.5 sm:text-base w-fit text-black bg-transparent shadow-none border-none">
                       <SelectValue />
                     </SelectTrigger>

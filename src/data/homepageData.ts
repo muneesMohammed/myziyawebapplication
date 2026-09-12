@@ -59,7 +59,7 @@ export const newArrivalsData: Product[] = [
 export const topSellingData: Product[] = [
   {
     id: 5,
-    title: "Vertical Striped Shirt",
+    title: "12ml Aura77 Pure Attar Oil",
     category: "fresheners",
     srcUrl: "/images/pic5.png",
     gallery: ["/images/pic5.png", "/images/pic10.png", "/images/pic11.png"],

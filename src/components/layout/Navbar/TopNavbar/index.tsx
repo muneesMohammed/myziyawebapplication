@@ -35,7 +35,7 @@ const data: NavMenu = [
         id: 13,
         label: "Fragrance Oil",
         url: "/shop#kids-clothes",
-        description: "00% uncut, alcohol-free pure Attar oil elixirs in hand-carved crystal flacons.",
+        description: "100% uncut, alcohol-free pure Attar oil elixirs in hand-carved crystal flacons.",
       },
       {
         id: 14,

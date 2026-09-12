@@ -12,7 +12,15 @@ import {
 import { FiSliders } from "react-icons/fi";
 import Filters from ".";
 
-const MobileFilters = () => {
+const MobileFilters = ({
+  priceRange,
+  onPriceChange,
+  onApply,
+}: {
+  priceRange: [number, number];
+  onPriceChange: (value: [number, number]) => void;
+  onApply: () => void;
+}) => {
   return (
     <>
       <Drawer>
@@ -34,7 +42,11 @@ const MobileFilters = () => {
             <DrawerDescription className="hidden">filters</DrawerDescription>
           </DrawerHeader>
           <div className="max-h-[90%] overflow-y-auto w-full px-5 md:px-6 py-5 space-y-5 md:space-y-6">
-            <Filters />
+            <Filters
+              priceRange={priceRange}
+              onPriceChange={onPriceChange}
+              onApply={onApply}
+            />
           </div>
         </DrawerContent>
       </Drawer>

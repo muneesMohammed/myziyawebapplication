@@ -7,7 +7,13 @@ import {
 } from "@/components/ui/accordion";
 import { Slider } from "@/components/ui/slider";
 
-const PriceSection = () => {
+const PriceSection = ({
+  value,
+  onChange,
+}: {
+  value: [number, number];
+  onChange: (value: [number, number]) => void;
+}) => {
   return (
     <Accordion type="single" collapsible defaultValue="filter-price">
       <AccordionItem value="filter-price" className="border-none">
@@ -16,11 +22,12 @@ const PriceSection = () => {
         </AccordionTrigger>
         <AccordionContent className="pt-4" contentClassName="overflow-visible">
           <Slider
-            defaultValue={[50, 200]}
+            value={value}
             min={0}
             max={250}
             step={1}
             label="₹"
+            onValueChange={(nextValue) => onChange([nextValue[0], nextValue[1]])}
           />
           <div className="mb-3" />
         </AccordionContent>

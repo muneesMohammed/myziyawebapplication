@@ -105,10 +105,10 @@ const Footer = () => {
             <p className="text-sm text-center sm:text-left text-black/60 mb-4 sm:mb-0 sm:mr-1">
               Myzia © Made by{" "}
               <Link
-                href="https://github.com/mohammadoftadeh"
+                href="https://github.com/muneesMohammed"
                 className="text-black font-medium"
               >
-                Mohammad Oftadeh
+                Mohammad munais
               </Link>
               {", "}
               Designed by{" "}
@@ -116,7 +116,7 @@ const Footer = () => {
                 href="https://www.figma.com/@hamzauix"
                 className="text-black font-medium"
               >
-                Hamza Naeem
+                DigitHal
               </Link>
             </p>
             <div className="flex items-center">

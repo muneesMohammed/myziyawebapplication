@@ -19,7 +19,7 @@ export default function AccountShell({
       <div className="mx-auto grid max-w-frame overflow-hidden rounded-[24px] border border-black/10 bg-white shadow-sm lg:grid-cols-[0.85fr_1.15fr]">
         <div className="flex min-h-[260px] flex-col justify-between bg-black p-7 text-white md:p-10 lg:min-h-[620px]">
           <Link href="/" className="text-xl font-bold tracking-[-0.04em]">
-            MYZIA
+            MYZIA PERFUMES
           </Link>
           <div className="max-w-sm">
             <p className="mb-4 text-sm uppercase tracking-[0.22em] text-white/60">

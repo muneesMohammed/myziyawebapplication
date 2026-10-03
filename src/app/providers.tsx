@@ -6,6 +6,8 @@ import { makeStore } from "../lib/store";
 import { PersistGate } from "redux-persist/integration/react";
 import SpinnerbLoader from "@/components/ui/SpinnerbLoader";
 
+import { AuthProvider } from "@/context/AuthContext";
+
 type Props = {
   children: React.ReactNode;
 };
@@ -23,7 +25,9 @@ const Providers = ({ children }: Props) => {
         }
         persistor={persistor}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </PersistGate>
     </Provider>
   );

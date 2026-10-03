@@ -1,33 +1,29 @@
-import {
-  newArrivalsData,
-  relatedProductData,
-  topSellingData,
-} from "@/data/homepageData";
 import ProductListSec from "@/components/common/ProductListSec";
 import BreadcrumbProduct from "@/components/product-page/BreadcrumbProduct";
 import Header from "@/components/product-page/Header";
 import Tabs from "@/components/product-page/Tabs";
-import { Product } from "@/types/product.types";
+import { getProductByIdOrSlug, getProducts } from "@/lib/api";
 import { notFound } from "next/navigation";
 
-const data: Product[] = [
-  ...newArrivalsData,
-  ...topSellingData,
-  ...relatedProductData,
-];
+export const revalidate = 0;
 
-export default function ProductPage({
+export default async function ProductPage({
   params,
 }: {
   params: { slug: string[] };
 }) {
-  const productData = data.find(
-    (product) => product.id === Number(params.slug[0])
-  );
+  const targetIdentifier = params.slug[0];
+  const productData = await getProductByIdOrSlug(targetIdentifier);
 
   if (!productData?.title) {
     notFound();
   }
+
+  // Fetch related products dynamically from same category or general list
+  const allProducts = await getProducts({ limit: 10 });
+  const relatedProducts = allProducts.filter(
+    (p) => String(p.id) !== String(productData.id)
+  ).slice(0, 4);
 
   return (
     <main>
@@ -40,8 +36,9 @@ export default function ProductPage({
         <Tabs />
       </div>
       <div className="mb-[50px] sm:mb-20">
-        <ProductListSec title="You might also like" data={relatedProductData} />
+        <ProductListSec title="You might also like" data={relatedProducts} />
       </div>
     </main>
   );
 }
+

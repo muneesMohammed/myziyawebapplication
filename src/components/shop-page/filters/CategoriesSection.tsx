@@ -1,45 +1,46 @@
+"use client";
+
 import Link from "next/link";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
-
-type Category = {
-  title: string;
-  slug: string;
-};
-
-const categoriesData: Category[] = [
-  {
-    title: "PerfumedCream",
-    slug: "/shop?category=perfumed-cream",
-  },
-  {
-    title: "pocket spray",
-    slug: "/shop?category=pocket-spray",
-  },
-  {
-    title: "oudh oil",
-    slug: "/shop?category=oudh-oil",
-  },
-  {
-    title: "bakhoor",
-    slug: "/shop?category=bakhoor",
-  },
-  {
-    title: "freshners",
-    slug: "/shop?category=fresheners",
-  },
-];
+import { getCategories, CategoryItem } from "@/lib/api";
 
 const CategoriesSection = () => {
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    getCategories().then((data) => {
+      if (isMounted) {
+        setCategories(data);
+        setLoading(false);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (loading) {
+    return <div className="py-2 text-sm text-black/40">Loading categories...</div>;
+  }
+
   return (
     <div className="flex flex-col space-y-0.5 text-black/60">
-      {categoriesData.map((category, idx) => (
+      <Link
+        href="/shop"
+        className="flex items-center justify-between py-2 text-black font-semibold"
+      >
+        All Products <MdKeyboardArrowRight />
+      </Link>
+      {categories.map((category) => (
         <Link
-          key={idx}
-          href={category.slug}
-          className="flex items-center justify-between py-2"
+          key={category.id}
+          href={`/shop?category=${encodeURIComponent(category.slug)}`}
+          className="flex items-center justify-between py-2 hover:text-black transition-colors capitalize"
         >
-          {category.title} <MdKeyboardArrowRight />
+          {category.name} <MdKeyboardArrowRight />
         </Link>
       ))}
     </div>
@@ -47,3 +48,4 @@ const CategoriesSection = () => {
 };
 
 export default CategoriesSection;
+

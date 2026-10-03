@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BreadcrumbShop from "@/components/shop-page/BreadcrumbShop";
-
 import {
   Select,
   SelectContent,
@@ -13,16 +12,12 @@ import {
 import MobileFilters from "@/components/shop-page/filters/MobileFilters";
 import Filters from "@/components/shop-page/filters";
 import { FiSliders } from "react-icons/fi";
-import {
-  newArrivalsData,
-  relatedProductData,
-  topSellingData,
-} from "@/data/homepageData";
 import ProductCard from "@/components/common/ProductCard";
+import { Product } from "@/types/product.types";
+import { getProducts } from "@/lib/api";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -32,60 +27,54 @@ import {
 export default function ShopPage({
   searchParams,
 }: {
-  searchParams: { category?: string };
+  searchParams: { category?: string; search?: string };
 }) {
   const pageSize = 9;
   const [currentPage, setCurrentPage] = useState(1);
-  const [priceRange, setPriceRange] = useState<[number, number]>([50, 200]);
-  const [appliedPriceRange, setAppliedPriceRange] =
-    useState<[number, number]>([50, 200]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([10, 500]);
+  const [appliedPriceRange, setAppliedPriceRange] = useState<[number, number]>([10, 500]);
   const [sortBy, setSortBy] = useState("most-popular");
-  const products = [
-    ...relatedProductData,
-    ...newArrivalsData,
-    ...topSellingData,
-  ];
-  const filteredProducts = searchParams.category
-    ? products.filter((product) => product.category === searchParams.category)
-    : products;
-  const priceFilteredProducts = filteredProducts.filter(
-    (product) =>
-      product.price >= appliedPriceRange[0] &&
-      product.price <= appliedPriceRange[1]
-  );
-  const sortedProducts = [...priceFilteredProducts].sort((firstProduct, secondProduct) => {
-    if (sortBy === "low-price") {
-      const firstPrice =
-        firstProduct.price -
-        (firstProduct.price * firstProduct.discount.percentage) / 100 -
-        firstProduct.discount.amount;
-      const secondPrice =
-        secondProduct.price -
-        (secondProduct.price * secondProduct.discount.percentage) / 100 -
-        secondProduct.discount.amount;
-      return firstPrice - secondPrice;
-    }
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    if (sortBy === "high-price") {
-      const firstPrice =
-        firstProduct.price -
-        (firstProduct.price * firstProduct.discount.percentage) / 100 -
-        firstProduct.discount.amount;
-      const secondPrice =
-        secondProduct.price -
-        (secondProduct.price * secondProduct.discount.percentage) / 100 -
-        secondProduct.discount.amount;
-      return secondPrice - firstPrice;
-    }
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
 
-    return secondProduct.rating - firstProduct.rating;
-  });
-  const categoryTitle = searchParams.category
+    const backendSortMap: Record<string, string> = {
+      "most-popular": "rating",
+      "low-price": "price_asc",
+      "high-price": "price_desc",
+    };
+
+    getProducts({
+      category_slug: searchParams.category,
+      search: searchParams.search,
+      min_price: appliedPriceRange[0],
+      max_price: appliedPriceRange[1],
+      sort_by: backendSortMap[sortBy] || "newest",
+      limit: 100,
+    }).then((data) => {
+      if (isMounted) {
+        setProducts(data);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [searchParams.category, searchParams.search, appliedPriceRange, sortBy]);
+
+  const categoryTitle = searchParams.search
+    ? `Search: "${searchParams.search}"`
+    : searchParams.category
     ? searchParams.category.replaceAll("-", " ")
     : "All products";
-  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / pageSize));
+
+  const totalPages = Math.max(1, Math.ceil(products.length / pageSize));
   const activePage = Math.min(currentPage, totalPages);
-  const paginatedProducts = sortedProducts.slice(
+  const paginatedProducts = products.slice(
     (activePage - 1) * pageSize,
     activePage * pageSize
   );
@@ -127,7 +116,7 @@ export default function ShopPage({
               </div>
               <div className="flex flex-col sm:items-center sm:flex-row">
                 <span className="text-sm md:text-base text-black/60 mr-3">
-                  Showing {paginatedProducts.length} of {sortedProducts.length} Products
+                  Showing {paginatedProducts.length} of {products.length} Products
                 </span>
                 <div className="flex items-center">
                   Sort by:{" "}
@@ -144,11 +133,21 @@ export default function ShopPage({
                 </div>
               </div>
             </div>
-            <div className="w-full grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
-              {paginatedProducts.map((product) => (
-                <ProductCard key={product.id} data={product} />
-              ))}
-            </div>
+            {loading ? (
+              <div className="py-12 text-center text-black/60 font-medium">
+                Loading products from database...
+              </div>
+            ) : paginatedProducts.length === 0 ? (
+              <div className="py-12 text-center text-black/60 font-medium">
+                No products found in this selection.
+              </div>
+            ) : (
+              <div className="w-full grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+                {paginatedProducts.map((product) => (
+                  <ProductCard key={product.id} data={product} />
+                ))}
+              </div>
+            )}
             <hr className="border-t-black/10" />
             <Pagination className="justify-between">
               <PaginationPrevious
@@ -157,7 +156,7 @@ export default function ShopPage({
                   event.preventDefault();
                   setCurrentPage(Math.max(activePage - 1, 1));
                 }}
-                  aria-disabled={activePage === 1}
+                aria-disabled={activePage === 1}
                 className="border border-black/10"
               />
               <PaginationContent>
@@ -196,3 +195,4 @@ export default function ShopPage({
     </main>
   );
 }
+

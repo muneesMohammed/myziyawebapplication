@@ -4,7 +4,7 @@ export type Discount = {
 };
 
 export type Product = {
-  id: number;
+  id: number | string;
   title: string;
   category: string;
   srcUrl: string;
@@ -12,4 +12,7 @@ export type Product = {
   price: number;
   discount: Discount;
   rating: number;
+  sku?: string;
+  slug?: string;
+  description?: string;
 };

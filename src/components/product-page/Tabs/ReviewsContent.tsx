@@ -1,5 +1,7 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -8,10 +10,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ReviewCard from "@/components/common/ReviewCard";
-import { reviewsData } from "@/data/homepageData";
+import { Review } from "@/types/review.types";
+import { getReviews } from "@/lib/api";
 import Link from "next/link";
 
 const ReviewsContent = () => {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    getReviews().then((data) => {
+      if (isMounted) {
+        setReviews(data);
+        setLoading(false);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <section>
       <div className="flex items-center justify-between flex-col sm:flex-row mb-5 sm:mb-6">
@@ -19,7 +38,7 @@ const ReviewsContent = () => {
           <h3 className="text-xl sm:text-2xl font-bold text-black mr-2">
             All Reviews
           </h3>
-          <span className="text-sm sm:text-base text-black/60">(451)</span>
+          <span className="text-sm sm:text-base text-black/60">({reviews.length})</span>
         </div>
         <div className="flex items-center space-x-2.5">
           <Select defaultValue="latest">
@@ -41,11 +60,15 @@ const ReviewsContent = () => {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5 sm:mb-9">
-        {reviewsData.map((review) => (
-          <ReviewCard key={review.id} data={review} isAction isDate />
-        ))}
-      </div>
+      {loading ? (
+        <div className="py-8 text-center text-black/60 font-medium">Loading reviews...</div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5 sm:mb-9">
+          {reviews.map((review) => (
+            <ReviewCard key={review.id} data={review} isAction isDate />
+          ))}
+        </div>
+      )}
       <div className="w-full px-4 sm:px-0 text-center">
         <Link
           href="#"
@@ -59,3 +82,4 @@ const ReviewsContent = () => {
 };
 
 export default ReviewsContent;
+

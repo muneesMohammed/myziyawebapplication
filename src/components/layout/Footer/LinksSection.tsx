@@ -63,17 +63,17 @@ const footerLinksData: FooterLinks[] = [
       {
         id: 31,
         label: "account",
-        url: "/signin",
+        url: "/account",
       },
       {
         id: 32,
         label: "manage deliveries",
-        url: "/address",
+        url: "/account",
       },
       {
         id: 33,
         label: "orders",
-        url: "#",
+        url: "/orders",
       },
       {
         id: 34,
